@@ -1,0 +1,1 @@
+export const API = "https://zepto-backend-tnqd.onrender.com"
