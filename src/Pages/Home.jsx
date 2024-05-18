@@ -4,9 +4,12 @@ import { API } from "../global";
 import Item from "./Item";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Button, Dropdown, Flex } from "antd";
 
 function Home() {
     const [itemData, setItemData] = useState([]);
+    const [filteredData, setFilteredData] = useState([])
+    const [category, setCategory] = useState("fruits")
     const navigate = useNavigate()
     const cartItems = useSelector((state) => state.itemShop.cartItems)
 
@@ -19,9 +22,18 @@ function Home() {
         });
     }, []);
 
+
+    useEffect(() => {
+        const filteredItems = itemData.filter(item => item.category === category)
+        setFilteredData(filteredItems)
+    }, [category, itemData])
+
+
     useEffect(() => {
         localStorage.setItem("cartItems", JSON.stringify(cartItems))
     }, [cartItems])
+
+
 
     return (
         <div>
@@ -35,8 +47,14 @@ function Home() {
                     </span>
                 </button>
             </div>
+
+            <Flex align="flex-center" gap="large" >
+                <Button type="success" onClick={() => setCategory("fruits")}>Fruits</Button>
+                <Button type="success" onClick={() => setCategory("vegetables")}>Vegetables</Button>
+            </Flex>
+            <hr />
             <div className="item-display">
-                {itemData.map((item) => (
+                {filteredData.map((item) => (
                     <Item key={item._id} item={item} />
                 ))}
             </div>
